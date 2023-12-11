@@ -1,0 +1,56 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /    
+
+spring:
+  application:
+    name: hello-ms-sb
+
+  main:
+    allow-bean-definition-overriding: true       
+    web-application-type: REACTIVE  
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/quipux-realm
+          jwk-set-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+            token-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/token      
+ 
+jwt:
+  auth:
+    converter:
+      resource-id: quipux-gateway
+      principle-attribute: preferred_username 
+      
+http:
+  cors-enabled: true
+  cors:
+    allowed-origins: 'http://localhost:8080' 
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: '*'  #list of headers separated by comma
+    allow-credentials: true
+    max-age: 1800
+      
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  
+management:
+  endpoints: 
+    web:
+      exposure:
+        include: openapi, swagger-ui      

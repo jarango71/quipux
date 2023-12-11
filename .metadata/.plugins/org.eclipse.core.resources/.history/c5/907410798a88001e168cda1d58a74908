@@ -1,0 +1,17 @@
+package com.quitpux.api.config;
+@Component
+public class UpdateOpenApiContext implements ApplicationListener<RefreshRoutesEvent> {
+
+    private final UpdateRouteContext updateRouteContext;
+    private final OpenApiConfig openApiConfig;
+
+    public UpdateOpenApiContext(UpdateRouteContext updateRouteContext, OpenApiConfig openApiConfig) {
+        this.updateRouteContext = updateRouteContext;
+        this.openApiConfig = openApiConfig;
+    }
+
+    @Override
+    public void onApplicationEvent(RefreshRoutesEvent event) {
+        openApiConfig.customOpenAPI(); // Actualiza las definiciones de OpenAPI
+    }
+}

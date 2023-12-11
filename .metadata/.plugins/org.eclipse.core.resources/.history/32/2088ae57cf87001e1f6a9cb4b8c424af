@@ -1,0 +1,14 @@
+package com.quitpux.api.config;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Component;
+
+@Component
+public class SwaggerCacheManager {
+
+    @CacheEvict(cacheNames = "swaggerUrls", allEntries = true)
+    public void evictSwaggerUrlsCache() {
+        // Puedes realizar acciones adicionales al vaciar la caché
+        System.out.println("Swagger cache evicted. Performing additional actions...");
+        // Agrega aquí cualquier otra lógica que desees ejecutar al vaciar la caché
+    }
+}

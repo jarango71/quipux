@@ -1,0 +1,52 @@
+package com.quitpux.api.config;
+
+import java.util.List;
+
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+import com.quitpux.api.dto.RouteDTO;
+
+import lombok.RequiredArgsConstructor;
+
+
+@Configuration
+@RequiredArgsConstructor
+@Primary
+public class UpdateDefinitionsContext {
+	
+    private final DiscoveryClient discoveryClient;
+    
+    private final ServiceDefinitionsContext definitionsContext;
+
+    @Bean
+    @Primary
+    public ServiceDefinitionsContext definitionsContext() {
+        return updateDefinitionsContext();
+    }
+    
+    public ServiceDefinitionsContext updateDefinitionsContext() {
+    	
+        List<String> services = discoveryClient.getServices();
+
+        definitionsContext.clear();
+        
+        for (String serviceId : services) {
+            if (!serviceId.toUpperCase().equals("UNKNOWN")) {
+                List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
+                for (ServiceInstance instance : instances) {
+                	definitionsContext.add(serviceId.toLowerCase(), new RouteDTO(serviceId.toLowerCase(), "/" + serviceId.toLowerCase() + "/**", instance.getUri()));
+                }
+            }
+        }
+
+        return definitionsContext;
+    }
+    
+    public ServiceDefinitionsContext getDefinitionsContext() {
+    	return definitionsContext;
+    }
+}

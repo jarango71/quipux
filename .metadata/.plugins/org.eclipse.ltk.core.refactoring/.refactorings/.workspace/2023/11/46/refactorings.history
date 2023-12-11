@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;cnp-spring-openapi&apos;" deleteContents="false" description="Delete resource &apos;cnp-spring-openapi&apos;" element1="/cnp-spring-openapi" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1699444114951"/>
+</session>

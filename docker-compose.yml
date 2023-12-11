@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  
+  gateway:
+    build:
+      context: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - registry
+    links:
+      - registry
+
+  registry:
+    build:
+      context: ./registry
+    ports:
+      - "8761:8761"
+
+  hello-ms-sb:
+    build:
+      context: ./hello-ms-sb
+    ports:
+      - "8081:8081"
+    depends_on:
+      - registry
+    links:
+      - registry
+
+  hello-ms-dj:
+    build:
+      context: ./hello-ms-dj
+    ports:
+      - "8000:8000"
+    depends_on:
+      - registry
+    links:
+      - registry
+       
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    ports:
+      - "9090:9090"
+    environment:
+      KEYCLOAK_ADMIN: admin 
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/standalone/data/import/realm-config.json  -Dkeycloak.profile.feature.upload_scripts=enabled    
+    command: 
+      - start-dev
+      - --http-port=9090
+      - --import-realm
+    volumes:
+       - ./keycloack/realm-quipux.json:/opt/jboss/keycloak/standalone/data/import/realm-quipux.json
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"       

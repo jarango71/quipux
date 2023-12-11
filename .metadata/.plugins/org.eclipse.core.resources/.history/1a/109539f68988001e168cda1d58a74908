@@ -1,0 +1,17 @@
+@Component
+public class UpdateOpenApiContext implements ApplicationListener<RefreshRoutesEvent> {
+
+    private final UpdateRouteContext updateRouteContext;
+
+    public UpdateOpenApiContext(UpdateRouteContext updateRouteContext) {
+        this.updateRouteContext = updateRouteContext;
+    }
+
+    @Autowired
+    private OpenApiConfig openApiConfig;
+
+    @Override
+    public void onApplicationEvent(RefreshRoutesEvent event) {
+        openApiConfig.customOpenAPI(); // Actualiza las definiciones de OpenAPI
+    }
+}

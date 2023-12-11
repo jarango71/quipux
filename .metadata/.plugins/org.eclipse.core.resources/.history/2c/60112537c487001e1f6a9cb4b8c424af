@@ -1,0 +1,17 @@
+package com.quitpux.api.config;
+import com.netflix.discovery.AbstractDiscoveryClientOptionalArgs;
+import com.netflix.discovery.EurekaClientConfig;
+
+public class MyDiscoveryClientOptionalArgs extends AbstractDiscoveryClientOptionalArgs<Object> {
+
+    private final EurekaClientConfig clientConfig;
+
+    public MyDiscoveryClientOptionalArgs(EurekaClientConfig clientConfig) {
+        this.clientConfig = clientConfig;
+    }
+
+  /*  @Override
+    public EurekaClientConfig getEurekaClientConfig() {
+        return clientConfig;
+    }*/
+}

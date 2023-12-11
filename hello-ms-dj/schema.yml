@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  title: Hello API
+  version: 1.0.0
+  description: Hello API
+paths:
+  /hello/:
+    get:
+      operationId: hello_retrieve
+      tags:
+      - hello
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

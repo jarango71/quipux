@@ -1,0 +1,5 @@
+package com.quitpux.api.config;
+
+public class GatewayConfig {
+
+}

@@ -1,0 +1,40 @@
+package com.quitpux.api.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+
+@Configuration
+public class GatewayConfig {
+	
+	@Autowired
+	private DiscoveryClient discoveryClient;
+	
+	@Autowired
+	private JwtTokenGatewayFilter jwtTokenGatewayFilter;	
+	
+	 @Bean
+     RouteLocator GatewayRoutes(RouteLocatorBuilder builder) {
+        RouteLocatorBuilder.Builder routeLocator = builder.routes();
+        List<String> services  = discoveryClient.getServices();
+        for (String serviceId: services) {
+        	if (!serviceId.toUpperCase().equals("UNKNOWN")) {
+        		List<ServiceInstance> intances = discoveryClient.getInstances(serviceId);
+	        	for (ServiceInstance intance: intances) {
+	        		routeLocator.route(intance.getServiceId().toLowerCase(), 
+	                  	   r -> r.path("/" + intance.getServiceId().toLowerCase() +  "/**")
+	                  	 .filters(f -> f.stripPrefix(1).filter(jwtTokenGatewayFilter))
+	                         .uri(intance.getUri()));
+	        	}
+        	}
+        }
+        return routeLocator.build();
+    }
+}

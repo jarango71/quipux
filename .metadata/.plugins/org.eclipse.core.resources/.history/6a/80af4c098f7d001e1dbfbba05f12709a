@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+    
+  main:
+    allow-bean-definition-overriding: true       
+    web-application-type: REACTIVE     
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/quipux-realm
+          jwk-set-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+            token-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/token      
+          
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          
+jwt:
+  auth:
+    converter:
+      resource-id: quipux-gateway
+      principle-attribute: preferred_username
+
+keycloack:
+  provider: 
+    server-url: http://localhost:9090
+    realm-name: quipux-realm
+    realm-master: master
+    admin-clic: admin-cli
+    user-console: admin
+    password-console: admin
+    client-id: quipux-gateway
+    client-secret: wsOGFuZElVCPYGaQ646U1wp7T6j6E9M4 
+    grant_type: password     
+      
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    instance-info-replication-interval-seconds: 10
+    registry-fetch-interval-seconds: 10    
+
+logging:
+  level:
+    org:
+      keycloak: DEBUG
+
+

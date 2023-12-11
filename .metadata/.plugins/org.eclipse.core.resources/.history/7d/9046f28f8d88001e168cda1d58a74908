@@ -1,0 +1,92 @@
+package com.quitpux.api.config;
+
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.core.properties.AbstractSwaggerUiConfigProperties.SwaggerUrl;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.Ordered;
+
+import com.quitpux.api.dto.RouteDTO;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import lombok.RequiredArgsConstructor;
+
+
+@Configuration
+@RequiredArgsConstructor
+public class OpenApiConfig implements ApplicationListener<RefreshRoutesEvent> ,Ordered  {
+	
+	private final UpdateRouteContext updateDefinitionsContext;
+	
+	private final SwaggerUiConfigProperties cachedSwaggerUiConfig;
+
+    @Bean
+    public OpenAPI openAPI() {
+    	OpenAPI openAPI = new OpenAPI();
+    	openAPI().info(apiInfo());
+    	
+    	openAPI().setServers(getServers());
+    	loadSwaggerUrls(); 
+    	 
+        return openAPI;
+    }
+
+
+    public Set<SwaggerUrl> loadSwaggerUrls() {
+    	
+       Set<SwaggerUrl> urls = new HashSet<>();
+    	
+    	urls.add(new SwaggerUrl("gateway", "/v3/api-docs", "gateway"));
+    	
+    	String timestamp = String.valueOf(System.currentTimeMillis());
+          	
+    	for (RouteDTO route : updateDefinitionsContext.getDefinitionsContext().getDefinitions()) {
+    		urls.add(new SwaggerUrl(route.getName(), route.getUri() + "/v3/api-docs?v=" + timestamp, route.getName()));
+    	}
+    	
+    	cachedSwaggerUiConfig.setUrls(null);
+    	cachedSwaggerUiConfig.setUrls(urls);
+    	return urls;	
+    } 
+    
+    public List<Server> getServers() {
+        List<Server> servers = new ArrayList<>();
+        servers.add(new Server().url("/v3/api-docs").description("gateway"));
+
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        for (RouteDTO route : updateDefinitionsContext.getDefinitionsContext().getDefinitions()) {
+            servers.add(new Server().url(route.getUri() + "/v3/api-docs?v=" + timestamp).description(route.getName()));
+        }
+
+        return servers;
+    }
+
+   private Info apiInfo() {
+        return new Info()
+                .title("Quipux API Gateway")
+                .description("API Documentation for the Quipux API Gateway")
+                .version("1.0.0");
+    }
+   
+	@Override
+	public int getOrder() {
+		return 2;
+	}
+	@Override
+	public void onApplicationEvent(RefreshRoutesEvent event) {
+		this.loadSwaggerUrls();
+	}
+}

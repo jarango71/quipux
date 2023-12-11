@@ -1,0 +1,99 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /  
+
+spring:
+  application:
+    name: gateway
+    
+  main:
+    allow-bean-definition-overriding: true       
+    web-application-type: REACTIVE     
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/quipux-realm
+          jwk-set-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+            token-uri: http://localhost:9090/realms/quipux-realm/protocol/openid-connect/token      
+          
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+scheduler:
+  config: 
+    enabled: false
+    initialDelay: 10
+    refreshRate: 8  
+         
+jwt:
+  auth:
+    converter:
+      resource-id: quipux-gateway
+      principle-attribute: preferred_username
+
+keycloack:
+  provider: 
+    server-url: http://localhost:9090
+    realm-name: quipux-realm
+    realm-master: master
+    admin-clic: admin-cli
+    user-console: admin
+    password-console: admin
+    client-id: quipux-gateway
+    client-secret: wsOGFuZElVCPYGaQ646U1wp7T6j6E9M4 
+    grant_type: password     
+    default-role: USER
+      
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true    
+    
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  
+
+management:
+  endpoints: 
+    web:
+      exposure:
+        include: openapi,swagger-ui,gateway,refresh
+        
+        
+http:
+  cors-enabled: true
+  cors:
+    allowed-origins: 'http://localhost:9000' 
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: '*'  #list of headers separated by comma
+    allow-credentials: true
+    max-age: 1800
+        
+  
+logging:
+  level:
+    org:
+      springframework:
+        cloud: DEBUG
+      keycloak: DEBUG
+      
+
+  
+

@@ -1,0 +1,38 @@
+package com.quitpux.api.config;
+
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.quitpux.api.dto.RouteDTO;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@RequiredArgsConstructor
+public class RoutesConfig {
+    
+	private final UpdateDefinitionsContext updateDefinitionsContext;
+
+    private final RouteLocatorBuilder cachedRouteLocatorBuilder;
+    
+    @Bean
+    public RouteLocator routes() {
+        return loadRoutes();
+    }
+    
+    public  RouteLocator  loadRoutes() {
+    	RouteLocatorBuilder.Builder builder = cachedRouteLocatorBuilder.routes();
+    	
+        for (RouteDTO route : updateDefinitionsContext.getDefinitionsContext().getDefinitions()) {
+        	builder.route(route.getName(),
+                    r -> r.path(route.getPath())
+                            .filters(f -> f.stripPrefix(1))
+                            .uri(route.getUri()));
+        }
+        return builder.build();    
+   }
+   
+
+}

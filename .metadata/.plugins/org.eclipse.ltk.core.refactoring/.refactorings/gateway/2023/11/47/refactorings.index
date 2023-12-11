@@ -1,0 +1,32 @@
+1699837040500	Delete element
+1699837297449	Delete element
+1699837302008	Delete element
+1699837306476	Delete element
+1699837549885	Delete element
+1699883460957	Delete element
+1699893332305	Delete element
+1699893386497	Rename type 'GatewayConfig'
+1699893724832	Rename type 'CorsConfig'
+1699914266925	Delete element
+1699998856959	Rename type 'JwtAuthenticationConverter'
+1699998913441	Rename type 'RouteUpdateService'
+1700004192665	Infer generic type arguments
+1700009982381	Delete element
+1700009988558	Delete element
+1700010059182	Delete element
+1700010068200	Delete element
+1700010271202	Rename type 'ServiceDefinitionsContext'
+1700010293901	Rename type 'UpdateServiceContext'
+1700010366768	Rename type 'UpdateRouteContext'
+1700010375370	Rename type 'UpdateDefinitionsContext'
+1700010430470	Rename type 'RefreshRoutesPublisherEvent'
+1700010812185	Rename type 'ApiPathRouteLocatorImpl'
+1700054427601	Delete element
+1700138978242	Delete element
+1700139290394	Delete element
+1700139493131	Delete element
+1700146757697	Rename package 'com.quitpux.api.controller'
+1700146772515	Rename package 'com.quitpux.api.resource'
+1700146787327	Rename type 'TestController'
+1700146798677	Rename type 'UsersController'
+1700310048737	Delete element

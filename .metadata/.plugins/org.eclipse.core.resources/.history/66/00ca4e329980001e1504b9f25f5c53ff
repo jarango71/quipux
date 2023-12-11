@@ -1,0 +1,28 @@
+package com.quipux.hello.sb.api.controller;
+
+
+import java.util.logging.Logger;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/test")
+public class TestController {
+	static Logger logger = Logger.getLogger(TestController.class.getName());
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN_CLIENT')")
+    public ResponseEntity<String> testAdmin(){
+    	return ResponseEntity.ok("Keycloak with ROLE ADMIN CLIENT");
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER_CLIENT')") 
+    public ResponseEntity<String> testUser(){
+        return ResponseEntity.ok("Keycloak with ROLE USER CLIENT");
+    }
+}

@@ -1,0 +1,21 @@
+package com.api.rest.SpringBootKeycloak.controllers;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class TestController {
+
+    @GetMapping("/hello-1")
+    @PreAuthorize("hasRole('admin_client')")
+    public String helloAdmin(){
+        return "Keycloak with ADMIN";
+    }
+
+    @GetMapping("/hello-2")
+    @PreAuthorize("hasRole('user_client') 
+    public String helloUser(){
+        return "Keycloak with USER";
+    }
+}

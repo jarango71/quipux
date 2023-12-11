@@ -1,0 +1,41 @@
+package com.quitpux.api.config;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springdoc.core.properties.AbstractSwaggerUiConfigProperties.SwaggerUrl;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.quitpux.api.dto.RouteDTO;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@RequiredArgsConstructor
+public class SwaggerConfig {
+	
+	private final UpdateDefinitionsContext updateDefinitionsContext;
+	
+	private final SwaggerUiConfigProperties cachedSwaggerUiConfig;
+ 
+    @Bean
+    public Set<SwaggerUrl> SwaggerUrls() {
+     	return loadSwaggerUrls();	
+    }
+    
+    public Set<SwaggerUrl> loadSwaggerUrls() {
+       Set<SwaggerUrl> urls = new HashSet<>();
+    	
+    	urls.add(new SwaggerUrl("Gateway", "/v3/api-docs", "Gateway"));
+    	
+    	for (RouteDTO route : updateDefinitionsContext.getDefinitionsContext().getDefinitions()) {
+    		urls.add(new SwaggerUrl(route.getName(), route.getUri() + "/v3/api-docs", route.getName()));
+    	}
+    	
+    	cachedSwaggerUiConfig.setUrls(urls);
+    	return urls;	
+    }
+
+}

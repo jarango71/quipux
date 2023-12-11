@@ -1,0 +1,1 @@
+http://localhost:9090/realms/quipux-realm-prod/.well-known/openid-configuration/

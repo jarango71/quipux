@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=keycloak
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - KEYCLOAK_IMPORT=/opt/jboss/keycloak/standalone/data/import/
+    volumes:
+      - ./keycloack/realm-config.json:/opt/jboss/keycloak/standalone/data/import/realm-config.json
+    command: 
+        - start-dev 
+        - --import-realm
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+
+

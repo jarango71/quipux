@@ -1,0 +1,21 @@
+package com.quitpux.api.controller;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class TestController {
+
+    @GetMapping("/test-admin")
+    @PreAuthorize("hasRole('admin_client')")
+    public String TestAdmin(){
+        return "Keycloak with ADMIN";
+    }
+
+    @GetMapping("/test-user")
+    @PreAuthorize("hasRole('user_client')") 
+    public String TestUser(){
+        return "Keycloak with USER";
+    }
+}
